@@ -4,7 +4,9 @@
   "QRCodeSigning": "QRCode Signing",
   "NamePlaceholder": "please enter user name",
   "PasswordPlaceholder": "please enter password",
+  "CaptchaPlaceholder": "please enter captcha",
   "Login": "Login",
   "Name": "User Name",
-  "Password": "User Password"
+  "Password": "User Password",
+  "Captcha": "Captcha"
 }

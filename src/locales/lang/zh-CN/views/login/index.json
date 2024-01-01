@@ -4,7 +4,9 @@
   "QRCodeSigning": "扫码登陆",
   "NamePlaceholder": "请输入用户名",
   "PasswordPlaceholder": "请输入密码",
+  "CaptchaPlaceholder": "请输入验证码",
   "Login": "登 陆",
   "Name": "用户名",
-  "Password": "密码"
+  "Password": "密码",
+  "Captcha": "验证码"
 }

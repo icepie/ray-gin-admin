@@ -1,4 +1,4 @@
-import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
+import { NForm, NFormItem, NInput, NButton, NImage } from 'naive-ui'
 
 import { setStorage } from '@/utils'
 import { useI18n } from '@/hooks/web'
@@ -8,6 +8,7 @@ import { useSigningActions } from '@/store'
 import { useAppRoot } from '@/hooks/template'
 
 import type { FormInst } from 'naive-ui'
+import { getCaptchaId, getCaptchaImageUrl } from '@/api/base/base'
 
 export default defineComponent({
   name: 'RSigning',
@@ -22,9 +23,16 @@ export default defineComponent({
     const useSigningForm = () => ({
       name: 'Ray Admin',
       pwd: '123456',
+      captcha: '',
     })
 
+    // 验证码ID
+    const captchaId = ref<string>()
+
+    const captchaImageUrl = ref<string>()
+
     const router = useRouter()
+
     const signingForm = ref(useSigningForm())
 
     const rules = {
@@ -38,7 +46,32 @@ export default defineComponent({
         message: t('views.login.index.PasswordPlaceholder'),
         trigger: ['blur', 'input'],
       },
+      captcha: {
+        required: true,
+        message: t('views.login.index.CaptchaPlaceholder'),
+        trigger: ['blur', 'input'],
+      },
     }
+
+    onMounted(async () => {
+      // 获取验证码
+      const getCaptchaIdData = await getCaptchaId()
+
+      if (getCaptchaIdData.success) {
+        captchaId.value = getCaptchaIdData.data!.captcha_id
+      }
+
+      if (!captchaId.value) {
+        window.$message.error('获取验证码失败')
+        return
+      }
+
+      // 获取验证码图片
+      captchaImageUrl.value = await getCaptchaImageUrl({
+        id: captchaId.value,
+        reload: 0,
+      })
+    })
 
     /** 普通登陆形式 */
     const handleLogin = () => {
@@ -72,6 +105,8 @@ export default defineComponent({
       signingForm,
       loginFormRef,
       handleLogin,
+      captchaId,
+      captchaImageUrl,
       rules,
       globalSpinning,
     }
@@ -95,6 +130,32 @@ export default defineComponent({
             placeholder={$t('views.login.index.PasswordPlaceholder')}
           />
         </NFormItem>
+
+        {/* 验证码  */}
+
+        <NFormItem
+          v-if={this.captchaId}
+          label={$t('views.login.index.Captcha')}
+          path="captcha"
+        >
+          <NInput
+            v-model:value={this.signingForm.captcha}
+            placeholder={$t('views.login.index.CaptchaPlaceholder')}
+          />
+
+          <NImage
+            src={this.captchaImageUrl}
+            // style="background-color: #fff; margin-left: 10px"
+            style={[
+              'background-color: #fff',
+              'margin-left: 10px',
+              'cursor: pointer',
+            ]}
+            width={90}
+            lazy
+          />
+        </NFormItem>
+
         <NButton
           style={['width: 100%', 'margin-to: 18px']}
           type="primary"
