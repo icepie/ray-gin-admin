@@ -29,6 +29,9 @@ export default defineComponent({
     // 验证码ID
     const captchaId = ref<string>()
 
+    // reload Flag
+    const reloadFlag = ref<0 | 1>(0)
+
     const captchaImageUrl = ref<string>()
 
     const router = useRouter()
@@ -53,55 +56,76 @@ export default defineComponent({
       },
     }
 
-    onMounted(async () => {
-      // 获取验证码
-      const getCaptchaIdData = await getCaptchaId()
+    // reLoad captcha
+    const reLoadCaptcha = async () => {
+      if (captchaId.value) {
+        if (reloadFlag.value === 0) {
+          reloadFlag.value = 1
+        } else {
+          reloadFlag.value = 0
+          // 获取验证码
+          const getCaptchaIdData = await getCaptchaId()
 
-      if (getCaptchaIdData.success) {
-        captchaId.value = getCaptchaIdData.data!.captcha_id
-      }
+          if (getCaptchaIdData.success) {
+            captchaId.value = getCaptchaIdData.data!.captcha_id
+          }
 
-      if (!captchaId.value) {
-        window.$message.error('获取验证码失败')
-        return
+          if (!captchaId.value) {
+            window.$message.error('获取验证码失败')
+            return
+          }
+        }
+      } else {
+        // 获取验证码
+        const getCaptchaIdData = await getCaptchaId()
+
+        if (getCaptchaIdData.success) {
+          captchaId.value = getCaptchaIdData.data!.captcha_id
+        }
+
+        if (!captchaId.value) {
+          window.$message.error('获取验证码失败')
+          return
+        }
       }
 
       // 获取验证码图片
       captchaImageUrl.value = await getCaptchaImageUrl({
         id: captchaId.value,
-        reload: 0,
+        reload: reloadFlag.value,
       })
+    }
+
+    onMounted(async () => {
+      await reLoadCaptcha()
     })
 
     /** 普通登陆形式 */
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
-        if (!valid) {
-          setVariable('globalSpinning', true)
-
-          signing(signingForm.value)
-            .then((res) => {
-              if (res.code === 0) {
-                setTimeout(() => {
-                  setVariable('globalSpinning', false)
-
-                  window.$message.success(`欢迎${signingForm.value.name}登陆~`)
-
-                  setStorage(APP_CATCH_KEY.token, 'tokenValue')
-                  setStorage(APP_CATCH_KEY.signing, res.data)
-
-                  router.push(getRootPath.value)
-                }, 2 * 1000)
-              }
-            })
-            .catch(() => {
-              window.$message.error('不可以这样哟, 不可以哟')
-            })
-        }
+        // if (!valid) {
+        //   setVariable('globalSpinning', true)
+        //   signing(signingForm.value)
+        //     .then((res) => {
+        //       if (res.code === 0) {
+        //         setTimeout(() => {
+        //           setVariable('globalSpinning', false)
+        //           window.$message.success(`欢迎${signingForm.value.name}登陆~`)
+        //           setStorage(APP_CATCH_KEY.token, 'tokenValue')
+        //           setStorage(APP_CATCH_KEY.signing, res.data)
+        //           router.push(getRootPath.value)
+        //         }, 2 * 1000)
+        //       }
+        //     })
+        //     .catch(() => {
+        //       window.$message.error('不可以这样哟, 不可以哟')
+        //     })
+        // }
       })
     }
 
     return {
+      reLoadCaptcha,
       signingForm,
       loginFormRef,
       handleLogin,
@@ -142,18 +166,23 @@ export default defineComponent({
             v-model:value={this.signingForm.captcha}
             placeholder={$t('views.login.index.CaptchaPlaceholder')}
           />
-
-          <NImage
-            src={this.captchaImageUrl}
-            // style="background-color: #fff; margin-left: 10px"
-            style={[
-              'background-color: #fff',
-              'margin-left: 10px',
-              'cursor: pointer',
-            ]}
-            width={90}
-            lazy
-          />
+          <div onClick={this.reLoadCaptcha}>
+            <NImage
+              src={this.captchaImageUrl}
+              style={{
+                backgroundColor: '#fff',
+                marginLeft: '10px',
+                cursor: 'pointer',
+              }}
+              preview-disabled
+              onError={() => {
+                this.captchaImageUrl = ''
+                window.$message.error('获取验证码失败')
+              }}
+              width={90}
+              lazy
+            />
+          </div>
         </NFormItem>
 
         <NButton

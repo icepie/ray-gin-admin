@@ -2,7 +2,6 @@
 type PaginationParam = {
   current?: number
   pageSize?: number
-  //   [key: string]: any
 } & Record<string, unknown>
 
 type ResponseResult<T> = {

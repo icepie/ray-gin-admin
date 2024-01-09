@@ -28,23 +28,6 @@ export const getCaptchaId = async () => {
   })
 }
 
-// export const getCaptchaImageUrl = async (
-//   data: captchaImgReq,
-// ): Promise<ResponseResult<captchaIdResp> | string> => {
-//   const resp = await request<ResponseResult<captchaIdResp> | Blob>({
-//     responseType: 'blob',
-//     url: `http://www.singzer.cn:8040/api/v1/captcha/image`,
-//     data: data,
-//     method: 'get',
-//   })
-
-//   if (resp instanceof Blob) {
-//     return URL.createObjectURL(resp)
-//   } else {
-//     return resp
-//   }
-// }
-
 export const getCaptchaImageUrl = async (
   data: captchaImgReq,
 ): Promise<string> => {
