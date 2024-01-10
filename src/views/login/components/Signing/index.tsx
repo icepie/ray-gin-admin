@@ -8,7 +8,8 @@ import { useSigningActions } from '@/store'
 import { useAppRoot } from '@/hooks/template'
 
 import type { FormInst } from 'naive-ui'
-import { getCaptchaId, getCaptchaImageUrl } from '@/api/base/base'
+import { Login, getCaptchaId, getCaptchaImageUrl } from '@/api/base/base'
+import { MD5 } from 'crypto-js'
 
 export default defineComponent({
   name: 'RSigning',
@@ -103,24 +104,53 @@ export default defineComponent({
     /** 普通登陆形式 */
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
-        // if (!valid) {
-        //   setVariable('globalSpinning', true)
-        //   signing(signingForm.value)
-        //     .then((res) => {
-        //       if (res.code === 0) {
-        //         setTimeout(() => {
-        //           setVariable('globalSpinning', false)
-        //           window.$message.success(`欢迎${signingForm.value.name}登陆~`)
-        //           setStorage(APP_CATCH_KEY.token, 'tokenValue')
-        //           setStorage(APP_CATCH_KEY.signing, res.data)
-        //           router.push(getRootPath.value)
-        //         }, 2 * 1000)
-        //       }
-        //     })
-        //     .catch(() => {
-        //       window.$message.error('不可以这样哟, 不可以哟')
-        //     })
-        // }
+        if (!valid) {
+          setVariable('globalSpinning', true)
+
+          // try {
+          Login({
+            username: signingForm.value.name,
+            password: MD5(signingForm.value.pwd).toString(),
+            captcha_id: captchaId.value,
+            captcha_code: signingForm.value.captcha,
+          })
+            .then((res) => {
+              console.log(res)
+            })
+            .catch(async (err) => {
+              if (err.error?.detail) {
+                window.$message.error(err.error?.detail)
+              } else {
+                window.$message.error(t('common.ReqError'))
+              }
+              console.log(err)
+
+              reloadFlag.value = 1
+              await reLoadCaptcha()
+            })
+
+          setVariable('globalSpinning', false)
+
+          // } catch (error) {
+          //   console.log(error)
+          // }
+
+          //   signing(signingForm.value)
+          //     .then((res) => {
+          //       if (res.code === 0) {
+          //         setTimeout(() => {
+          //           setVariable('globalSpinning', false)
+          //           window.$message.success(`欢迎${signingForm.value.name}登陆~`)
+          //           setStorage(APP_CATCH_KEY.token, 'tokenValue')
+          //           setStorage(APP_CATCH_KEY.signing, res.data)
+          //           router.push(getRootPath.value)
+          //         }, 2 * 1000)
+          //       }
+          //     })
+          //     .catch(() => {
+          //       window.$message.error('不可以这样哟, 不可以哟')
+          //     })
+        }
       })
     }
 
@@ -158,7 +188,7 @@ export default defineComponent({
         {/* 验证码  */}
 
         <NFormItem
-          v-if={this.captchaId}
+          v-show={this.captchaId}
           label={$t('views.login.index.Captcha')}
           path="captcha"
         >

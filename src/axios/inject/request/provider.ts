@@ -48,8 +48,8 @@ const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
   }
 
   return {
-    key: 'X-TOKEN',
-    value: token,
+    key: 'Authorization',
+    value: `Bearer ${token}`,
   }
 }
 
@@ -58,13 +58,9 @@ const injectRequestHeaders: BeforeFetchFunction<RequestInterceptorConfig> = (
   ins,
   mode,
 ) => {
-  appendRequestHeaders(ins, [
-    requestHeaderToken(ins, mode),
-    {
-      key: 'Demo-Header-Key',
-      value: 'Demo Header Value',
-    },
-  ])
+  if (ins.needAuth) {
+    appendRequestHeaders(ins, [requestHeaderToken(ins, mode)])
+  }
 }
 
 /**
