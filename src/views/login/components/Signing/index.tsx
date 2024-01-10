@@ -29,8 +29,8 @@ export default defineComponent({
     const globalSpinning = getVariableToRefs('globalSpinning')
 
     const useSigningForm = () => ({
-      name: 'Ray Admin',
-      pwd: '123456',
+      name: 'admin',
+      pwd: 'abc-123',
       captcha: '',
     })
 
