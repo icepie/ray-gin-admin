@@ -8,8 +8,15 @@ import { useSigningActions } from '@/store'
 import { useAppRoot } from '@/hooks/template'
 
 import type { FormInst } from 'naive-ui'
-import { Login, getCaptchaId, getCaptchaImageUrl } from '@/api/base/base'
+import {
+  Login,
+  GetCaptchaId,
+  GetCaptchaImageUrl,
+  GetCurrentUser,
+} from '@/api/base/base'
 import { MD5 } from 'crypto-js'
+
+import './index.scss'
 
 export default defineComponent({
   name: 'RSigning',
@@ -65,7 +72,7 @@ export default defineComponent({
         } else {
           reloadFlag.value = 0
           // 获取验证码
-          const getCaptchaIdData = await getCaptchaId()
+          const getCaptchaIdData = await GetCaptchaId()
 
           if (getCaptchaIdData.success) {
             captchaId.value = getCaptchaIdData.data!.captcha_id
@@ -78,7 +85,7 @@ export default defineComponent({
         }
       } else {
         // 获取验证码
-        const getCaptchaIdData = await getCaptchaId()
+        const getCaptchaIdData = await GetCaptchaId()
 
         if (getCaptchaIdData.success) {
           captchaId.value = getCaptchaIdData.data!.captcha_id
@@ -91,7 +98,7 @@ export default defineComponent({
       }
 
       // 获取验证码图片
-      captchaImageUrl.value = await getCaptchaImageUrl({
+      captchaImageUrl.value = await GetCaptchaImageUrl({
         id: captchaId.value,
         reload: reloadFlag.value,
       })
@@ -115,7 +122,25 @@ export default defineComponent({
             captcha_code: signingForm.value.captcha,
           })
             .then((res) => {
-              console.log(res)
+              // console.log(res)
+
+              res.data?.access_token &&
+                setStorage(APP_CATCH_KEY.token, res.data?.access_token)
+
+              GetCurrentUser()
+                .then((res) => {
+                  console.log(res)
+                  // res.data && setStorage(APP_CATCH_KEY.signing, res.data)
+                  window.$message.success(`欢迎${res.data?.name}登陆~`)
+                  router.push(getRootPath.value)
+                })
+                .catch(() => {
+                  window.$message.error('获取用户信息失败')
+                })
+
+              // res.data?. && setStorage(APP_CATCH_KEY.token, res.data?.token)
+
+              // setStorage(APP_CATCH_KEY.token, 'tokenValue')
             })
             .catch(async (err) => {
               if (err.error?.detail) {
@@ -130,7 +155,6 @@ export default defineComponent({
             })
 
           setVariable('globalSpinning', false)
-
           // } catch (error) {
           //   console.log(error)
           // }
@@ -196,20 +220,30 @@ export default defineComponent({
             v-model:value={this.signingForm.captcha}
             placeholder={$t('views.login.index.CaptchaPlaceholder')}
           />
-          <div onClick={this.reLoadCaptcha}>
+          <div
+            onClick={this.reLoadCaptcha}
+            class="captcha"
+            // style={{
+            //   display: 'flex',
+            //   alignItems: 'center',
+            //   justifyContent: 'center',
+            //   marginLeft: '12px',
+            //   cursor: 'pointer',
+            // }}
+          >
             <NImage
               src={this.captchaImageUrl}
-              style={{
-                backgroundColor: '#fff',
-                marginLeft: '10px',
-                cursor: 'pointer',
-              }}
+              class="captcha img"
+              // style={{
+              //   backgroundColor: '#fff',
+              //   border: '1px solid #ccc',
+              // }}
               preview-disabled
               onError={() => {
                 this.captchaImageUrl = ''
                 window.$message.error('获取验证码失败')
               }}
-              width={90}
+              width={80}
               lazy
             />
           </div>
