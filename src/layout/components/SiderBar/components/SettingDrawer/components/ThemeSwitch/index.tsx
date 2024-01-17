@@ -13,7 +13,7 @@ import { NSpace, NSwitch, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { useSettingGetters } from '@/store'
-import { useTheme } from '@/hooks/template'
+import { useTheme } from '@/hooks'
 
 export default defineComponent({
   name: 'ThemeSwitch',

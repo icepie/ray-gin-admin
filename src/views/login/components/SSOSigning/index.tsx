@@ -59,11 +59,7 @@ const SSOSigning = defineComponent({
   },
   render() {
     return (
-      <NSpace
-        class="sso-signing"
-        align="center"
-        itemStyle={{ display: 'flex' }}
-      >
+      <NSpace class="sso-signing" align="center">
         {this.ssoSigningOptions.map((curr) => (
           <NPopover key={curr.key}>
             {{

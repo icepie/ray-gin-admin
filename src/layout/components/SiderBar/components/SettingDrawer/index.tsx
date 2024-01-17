@@ -23,7 +23,7 @@ import {
 } from 'naive-ui'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
-import { APP_THEME } from '@/app-config/designConfig'
+import { APP_THEME } from '@/app-config'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { PropType } from 'vue'

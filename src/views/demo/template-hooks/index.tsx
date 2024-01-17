@@ -17,7 +17,7 @@ import {
   useSpinning,
   useWatermark,
   useTheme,
-} from '@/hooks/template'
+} from '@/hooks'
 import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
 
@@ -79,7 +79,7 @@ export default defineComponent({
     } = this
 
     return (
-      <NSpace wrapItem={false} vertical>
+      <NSpace vertical>
         <NCard title="接口说明">
           <h3>
             hooks/template 包存放模板专属 hook
@@ -145,19 +145,27 @@ export default defineComponent({
           </h3>
           <NButton
             onClick={() => {
-              maximize(!this.maximizeRef)
+              maximize(!this.maximizeRef, {
+                scrollToOptions: {
+                  left: 0,
+                  top: 0,
+                },
+              })
             }}
           >
-            最大化内容区域
+            最大化内容区域，并且滚动至顶部
           </NButton>
         </NCard>
         <NCard title="useAppNavigation 导航方法">
           <h3>
             navigationTo
             参数为正整数时，会更具当前的菜单顺序进行自动导航匹配。但是此方法仅能导航一级菜单。并且如果导航菜单非根菜单项，会自动递归导航至一子菜单。
+            支持传入完整的菜单路径，如：/multi/multi-menu-one。
           </h3>
           <br />
-          <NButton onClick={() => navigationTo(16)}>跳转至多级菜单</NButton>
+          <NButton onClick={() => navigationTo('/multi/multi-menu-one')}>
+            跳转至多级菜单
+          </NButton>
         </NCard>
       </NSpace>
     )

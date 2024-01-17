@@ -18,7 +18,7 @@ import dayjs from 'dayjs'
 import { useSigningActions, useSettingActions } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { useDevice } from '@/hooks/web'
+import { useDevice } from '@/hooks'
 
 import type { FormInst, InputInst } from 'naive-ui'
 

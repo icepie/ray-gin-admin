@@ -74,7 +74,7 @@ const TableView = defineComponent({
         title: 'Action',
         key: 'actions',
         render: (row: RowData) => (
-          <NSpace wrapItem={false} align="center">
+          <NSpace align="center">
             <NButton size="tiny">查看</NButton>
             <RMoreDropdown
               options={[
@@ -155,7 +155,7 @@ const TableView = defineComponent({
   },
   render() {
     return (
-      <NSpace wrapItem={false} vertical>
+      <NSpace vertical>
         <NCard title="RTable">
           基于 NDataTable 封装，继承该组件所有 props 属性。查看 RTable props
           文件即可查看该组件拓展项

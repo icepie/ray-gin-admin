@@ -19,7 +19,7 @@ import { RIcon } from '@/components'
 import RayLink from '@/app-components/app/RayLink'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
-import { LOCAL_OPTIONS } from '@/app-config/localConfig'
+import { LOCAL_OPTIONS } from '@/app-config'
 import { useWindowSize } from '@vueuse/core'
 import { useSettingActions } from '@/store'
 
@@ -69,13 +69,7 @@ const Login = defineComponent({
                 Ray Template
               </NGradientText>
             </NSpace>
-            <NSpace
-              align="center"
-              class="login-action__wrapper"
-              itemStyle={{
-                display: 'flex',
-              }}
-            >
+            <NSpace align="center" class="login-action__wrapper">
               <ThemeSwitch />
               <NDropdown
                 options={LOCAL_OPTIONS}
@@ -154,7 +148,6 @@ const Login = defineComponent({
               align="center"
               justify="center"
               class="login-copyright__wrapper"
-              wrapItem={false}
             >
               {this.copyright}
             </NSpace>

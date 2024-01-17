@@ -238,7 +238,7 @@ export default defineComponent({
             defaultElement: <div style="display: none;"></div>,
           }),
           'header-extra': () => (
-            <NSpace wrapItem={false} align="center">
+            <NSpace align="center">
               {/* eslint-disable @typescript-eslint/no-explicit-any */}
               {tool(this.$props as any)}
             </NSpace>

@@ -27,7 +27,7 @@ import { queryElements, addClass, removeClass } from '@/utils'
 import { debounce } from 'lodash-es'
 import { useMenuGetters, useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
-import { useDevice } from '@/hooks/web'
+import { useDevice } from '@/hooks'
 import { useEventListener } from '@vueuse/core'
 
 import type { AppRouteMeta } from '@/router/type'
@@ -155,7 +155,7 @@ export default defineComponent({
         } else {
           modelShow.value = false
 
-          changeMenuModelValue(option.key, option)
+          changeMenuModelValue(option.fullPath, option)
         }
       }
     }
@@ -257,7 +257,6 @@ export default defineComponent({
     const SearchItem = ({ menuOption }: { menuOption: AppMenuOption }) => (
       <NSpace
         align="center"
-        wrapItem={false}
         class="content-item"
         {...{
           onClick: handleSearchItemClick.bind(this, menuOption),
@@ -294,7 +293,7 @@ export default defineComponent({
   },
   render() {
     const { isTabletOrSmaller, searchOptions } = this
-    const { SearchItem } = this
+    const { SearchItem, fuzzySearchMenuOptions } = this
 
     return isTabletOrSmaller ? (
       <div style="display: none;"></div>
@@ -312,7 +311,7 @@ export default defineComponent({
                   size="large"
                   v-model:value={this.searchValue}
                   clearable
-                  onInput={this.fuzzySearchMenuOptions.bind(this)}
+                  onInput={fuzzySearchMenuOptions.bind(this)}
                 >
                   {{
                     prefix: () => <RIcon name="search" size="24" />,
@@ -321,9 +320,9 @@ export default defineComponent({
               </div>
               <NScrollbar class="global-search__card-content">
                 {searchOptions.length ? (
-                  <NSpace vertical wrapItem={false} size={[8, 8]}>
+                  <NSpace vertical size={[8, 8]}>
                     {searchOptions.map((curr) => (
-                      <SearchItem menuOption={curr} key={curr.key} />
+                      <SearchItem menuOption={curr} key={curr.fullPath} />
                     ))}
                   </NSpace>
                 ) : (
@@ -332,7 +331,6 @@ export default defineComponent({
                       icon: () => null,
                       default: () => (
                         <NSpace
-                          wrapItem={false}
                           justify="center"
                           class="global-search__empty-content"
                         >
@@ -348,7 +346,6 @@ export default defineComponent({
                 <NSpace
                   class="card-footer__tip-wrapper"
                   align="center"
-                  wrapItem={false}
                   size={[24, 8]}
                 >
                   {this.helperTipOptions.map((curr) => (

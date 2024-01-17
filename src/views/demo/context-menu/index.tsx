@@ -11,7 +11,7 @@
 
 import { NSpace, NCard, NDropdown } from 'naive-ui'
 
-import { useContextmenuCoordinate } from '@/hooks/components'
+import { useContextmenuCoordinate } from '@/hooks'
 
 export default defineComponent({
   name: 'ContextMenuDemo',
@@ -52,7 +52,7 @@ export default defineComponent({
     const { x, y, show } = this
 
     return (
-      <NSpace vertical wrapItem={false}>
+      <NSpace vertical>
         <NCard title="useContextmenuCoordinate + NDropdown 实现右键菜单">
           <NSpace vertical>
             <h3>默认点击元素外部会关闭菜单。</h3>

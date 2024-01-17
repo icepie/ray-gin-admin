@@ -147,7 +147,7 @@ const MockDemo = defineComponent({
   },
   render() {
     return (
-      <NSpace vertical wrapItem={false}>
+      <NSpace vertical>
         <NCard title="Mock 数据">
           <h2>
             mock

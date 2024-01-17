@@ -131,7 +131,7 @@ const CalculatePrecision = defineComponent({
           <NCard title="平分一个值">
             {{
               default: () => (
-                <NSpace wrapItem={false}>
+                <NSpace>
                   <NInputNumber
                     v-model:value={this.distributeValue}
                     onUpdateValue={() => {

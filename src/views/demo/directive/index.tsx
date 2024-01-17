@@ -65,7 +65,7 @@ const RDirective = defineComponent({
           </NInputGroup>
         </NCard>
         <NCard title="节流">
-          <NSpace wrapItem={true} vertical>
+          <NSpace vertical>
             <NButton
               v-throttle={{
                 func: this.updateDemoValue.bind(null, 'throttleBtnClickCount'),
@@ -81,7 +81,7 @@ const RDirective = defineComponent({
           </NSpace>
         </NCard>
         <NCard title="防抖">
-          <NSpace wrapItem={true} vertical>
+          <NSpace vertical>
             <NButton
               v-debounce={{
                 func: this.updateDemoValue.bind(null, 'debounceBtnClickCount'),

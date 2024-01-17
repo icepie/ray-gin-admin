@@ -19,7 +19,7 @@ export default defineComponent({
   },
   render() {
     return (
-      <NSpace wrapItem={false} size={[0, 0]}>
+      <NSpace size={[0, 0]} wrapItem={false}>
         <SiderBar />
       </NSpace>
     )

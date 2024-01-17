@@ -1,3 +1,8 @@
+/**
+ *
+ * 友情链接组件，无实际项目意义
+ */
+
 import { NAvatar, NTooltip, NSpace } from 'naive-ui'
 
 interface AvatarOptions {
@@ -7,7 +12,7 @@ interface AvatarOptions {
   icon: string
 }
 
-const RayLink = defineComponent({
+export default defineComponent({
   name: 'RayLink',
   setup() {
     const avatarOptions: AvatarOptions[] = [
@@ -84,12 +89,3 @@ const RayLink = defineComponent({
     )
   },
 })
-
-export default RayLink
-
-/**
- *
- * 友链组件
- *
- * 这个组件用作初试模板中, 不喜欢自行删除
- */

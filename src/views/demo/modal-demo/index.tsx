@@ -27,7 +27,7 @@ export default defineComponent({
   },
   render() {
     return (
-      <NSpace vertical wrapItem={false}>
+      <NSpace vertical>
         <NCard title="props">
           <NSpace vertical>
             <h3>

@@ -22,7 +22,7 @@ import './index.scss'
 import { NAvatar, NSpace } from 'naive-ui'
 
 import { avatarProps, spaceProps } from 'naive-ui'
-import { APP_CATCH_KEY } from '@/app-config/appConfig'
+import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage } from '@/utils'
 
 import type { PropType } from 'vue'
@@ -67,9 +67,9 @@ const AppAvatar = defineComponent({
       <NSpace
         class="app-avatar"
         {...this.$props}
-        wrapItem={false}
         style={this.cssVars}
         size={this.spaceSize}
+        wrapItem={false}
       >
         <NAvatar
           // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any

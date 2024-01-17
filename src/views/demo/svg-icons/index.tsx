@@ -38,7 +38,7 @@ const PreviewSVGIcons = defineComponent({
         {{
           'header-extra': () => '点击图标复制代码',
           default: () => (
-            <NSpace wrapItem={false}>
+            <NSpace>
               {this.icons.map((curr) => (
                 <div
                   class="pre-view-icons__card"

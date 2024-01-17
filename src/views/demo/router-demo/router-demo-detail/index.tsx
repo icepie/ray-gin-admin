@@ -15,7 +15,7 @@ const RouterDemoDetail = defineComponent({
   name: 'RouterDemoDetail',
   render() {
     return (
-      <NSpace wrapItem={false}>
+      <NSpace>
         <NCard title={(this.$route.query.name as string) || 'hello'}>
           你好 {this.$route.query.name}
         </NCard>
