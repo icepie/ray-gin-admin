@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   '@vueuse/core':
-    specifier: ^10.6.1
+    specifier: ^10.7.0
     version: 10.7.0(vue@3.4.4)
   awesome-qr:
     specifier: 2.1.5-rc.0
@@ -54,7 +54,7 @@ dependencies:
     specifier: ^1.6.0
     version: 1.6.0
   vue:
-    specifier: ^3.4.0
+    specifier: ^3.4.4
     version: 3.4.4(typescript@5.3.3)
   vue-hooks-plus:
     specifier: 1.8.5
@@ -1020,8 +1020,8 @@ packages:
       vue-i18n:
         optional: true
     dependencies:
-      '@intlify/message-compiler': 9.8.0
-      '@intlify/shared': 9.8.0
+      '@intlify/message-compiler': 9.9.0
+      '@intlify/shared': 9.9.0
       acorn: 8.11.3
       escodegen: 2.1.0
       estree-walker: 2.0.2
@@ -1040,25 +1040,12 @@ packages:
       '@intlify/message-compiler': 9.9.0
       '@intlify/shared': 9.9.0
 
-  /@intlify/message-compiler@9.8.0:
-    resolution: {integrity: sha512-McnYWhcoYmDJvssVu6QGR0shqlkJuL1HHdi5lK7fNqvQqRYaQ4lSLjYmZxwc8tRNMdIe9/KUKfyPxU9M6yCtNQ==}
-    engines: {node: '>= 16'}
-    dependencies:
-      '@intlify/shared': 9.8.0
-      source-map-js: 1.0.2
-    dev: true
-
   /@intlify/message-compiler@9.9.0:
     resolution: {integrity: sha512-yDU/jdUm9KuhEzYfS+wuyja209yXgdl1XFhMlKtXEgSFTxz4COZQCRXXbbH8JrAjMsaJ7bdoPSLsKlY6mXG2iA==}
     engines: {node: '>= 16'}
     dependencies:
       '@intlify/shared': 9.9.0
       source-map-js: 1.0.2
-
-  /@intlify/shared@9.8.0:
-    resolution: {integrity: sha512-TmgR0RCLjzrSo+W3wT0ALf9851iFMlVI9EYNGeWvZFUQTAJx0bvfsMlPdgVtV1tDNRiAfhkFsMKu6jtUY1ZLKQ==}
-    engines: {node: '>= 16'}
-    dev: true
 
   /@intlify/shared@9.9.0:
     resolution: {integrity: sha512-1ECUyAHRrzOJbOizyGufYP2yukqGrWXtkmTu4PcswVnWbkcjzk3YQGmJ0bLkM7JZ0ZYAaohLGdYvBYnTOGYJ9g==}
@@ -1080,7 +1067,7 @@ packages:
         optional: true
     dependencies:
       '@intlify/bundle-utils': 7.4.0(vue-i18n@9.9.0)
-      '@intlify/shared': 9.8.0
+      '@intlify/shared': 9.9.0
       '@rollup/pluginutils': 5.1.0
       '@vue/compiler-sfc': 3.4.4
       debug: 4.3.4

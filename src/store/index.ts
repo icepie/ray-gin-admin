@@ -34,6 +34,7 @@ export * from './hooks/useMenuStore'
 export * from './hooks/useSettingStore'
 export * from './hooks/useSigningStore'
 export * from './hooks/useKeepAliveStore'
+export * from './hooks/useUserStore'
 
 /**
  *
