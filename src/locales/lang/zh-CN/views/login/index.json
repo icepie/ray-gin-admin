@@ -8,5 +8,6 @@
   "Login": "登 陆",
   "Name": "用户名",
   "Password": "密码",
-  "Captcha": "验证码"
+  "Captcha": "验证码",
+  "RayTemplate": "开箱即用的中后台管理系统"
 }
