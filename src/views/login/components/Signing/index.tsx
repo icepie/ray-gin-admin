@@ -1,4 +1,4 @@
-import { NForm, NFormItem, NInput, NButton, NImage } from 'naive-ui'
+import { NForm, NFormItem, NInput, NButton, NImage, NCheckbox } from 'naive-ui'
 
 import { setStorage } from '@/utils'
 import { useI18n, useAppRoot } from '@/hooks'
@@ -30,6 +30,7 @@ export default defineComponent({
     const useSigningForm = () => ({
       name: 'admin',
       pwd: 'abc-123',
+      rememberMe: false,
       captcha: '',
     })
 
@@ -256,6 +257,12 @@ export default defineComponent({
         >
           {$t('views.login.index.Login')}
         </NButton>
+        <NCheckbox
+          style={['margin-top: 18px']}
+          v-model:checked={this.signingForm.rememberMe}
+        >
+          {$t('views.login.index.RememberMe')}
+        </NCheckbox>
       </NForm>
     )
   },
