@@ -21,6 +21,7 @@
 
 import { isEmpty } from 'lodash-es'
 import { removeStorage } from '@/utils'
+import { APP_CATCH_KEY } from '@/app-config'
 
 import type {
   SigningForm,
@@ -53,7 +54,7 @@ export const piniaSigningStore = defineStore(
           state.signingCallback = {
             role: 'admin',
             name: SigningForm.name,
-            avatar: 'https://r2chevereto.yka.moe/longmao.navigator.png',
+            avatar: 'https://avatars.githubusercontent.com/u/51957438?v=4',
           }
 
           resolve({
@@ -78,7 +79,7 @@ export const piniaSigningStore = defineStore(
      */
     const logout = () => {
       window.$message.info('账号退出中...')
-      removeStorage('all-sessionStorage')
+      removeStorage('__all_sessionStorage__', 'sessionStorage')
 
       setTimeout(() => window.location.reload())
     }
@@ -91,7 +92,7 @@ export const piniaSigningStore = defineStore(
   },
   {
     persist: {
-      key: 'piniaSigningStore',
+      key: APP_CATCH_KEY.appPiniaSigningStore,
       paths: ['signingCallback'],
       storage: sessionStorage,
     },

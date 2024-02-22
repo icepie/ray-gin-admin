@@ -1,5 +1,5 @@
 import type { DropdownOption } from 'naive-ui'
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref, VNode } from 'vue'
 
 export interface IconEventMapOptions {
   [propName: string]: (...args: unknown[]) => unknown
@@ -21,10 +21,10 @@ export interface IconOptions {
   eventKey?: string
   dropdown?: IconDropdownOptions
   iconClass?: string
+  render?: VNode | JSX.Element
 }
 
 export interface IconOptionsFC {
   isTabletOrSmaller: Ref<boolean>
   isFullscreen: Ref<boolean>
-  globalMainLayoutLoad: Ref<boolean>
 }

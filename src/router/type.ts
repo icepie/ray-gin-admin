@@ -3,11 +3,20 @@
 import type { RouteRecordRaw } from 'vue-router'
 import type { Recordable } from '@/types'
 import type { DefineComponent, VNode } from 'vue'
+import type { TagProps } from 'naive-ui'
 
 export type Component<T = any> =
   | DefineComponent<{}, {}, any>
   | (() => Promise<typeof import('*.vue')>)
   | (() => Promise<T>)
+
+export interface AppMenuExtraOptions {
+  label?: string | number
+  icon?: VNode
+  type?: TagProps['type']
+  show?: boolean
+  i18nLabel?: string
+}
 
 export interface AppRouteMeta {
   i18nKey?: string
@@ -21,6 +30,7 @@ export interface AppRouteMeta {
   keepAlive?: boolean
   sameLevel?: boolean
   env?: string | string[]
+  extra?: AppMenuExtraOptions
 }
 
 // @ts-ignore

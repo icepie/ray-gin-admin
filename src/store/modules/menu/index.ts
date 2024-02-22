@@ -25,13 +25,14 @@
 
 import { NEllipsis } from 'naive-ui'
 
-import { setStorage, pick } from '@/utils'
+import { setStorage, pick, equalRouterPath } from '@/utils'
 import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
 import {
   parseAndFindMatchingNodes,
   updateDocumentTitle,
-  hasMenuIcon,
+  createMenuIcon,
   getCatchMenuKey,
+  createMenuExtra,
 } from './helper'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/appRouteModules'
@@ -41,6 +42,47 @@ import { APP_CATCH_KEY } from '@/app-config'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/type'
 import type { LocationQuery } from 'vue-router'
+
+let cachePreNormal: AppMenuOption | undefined = void 0
+
+/**
+ *
+ * @param options 菜单列表或者类似菜单列表的数据结构
+ * @param target 目标路径
+ *
+ * @returns 匹配的菜单项
+ *
+ * @description
+ * 递归查找匹配的菜单项，缓存上一次的匹配项。
+ * 并且该方法一旦匹配成功就会立即返回。
+ *
+ * 通过 fullPath 进行匹配。
+ *
+ * @example
+ * depthSearchAppMenu([{ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } }], '/dashboard')
+ */
+export const depthSearchAppMenu = (
+  options: AppMenuOption[],
+  target: string,
+) => {
+  if (cachePreNormal && equalRouterPath(cachePreNormal.fullPath, target)) {
+    return cachePreNormal
+  }
+
+  for (const curr of options) {
+    if (equalRouterPath(curr.fullPath, target)) {
+      cachePreNormal = curr
+
+      return curr
+    }
+
+    if (curr.children?.length) {
+      depthSearchAppMenu(curr.children, target)
+
+      continue
+    }
+  }
+}
 
 export const piniaMenuStore = defineStore(
   'menu',
@@ -60,13 +102,27 @@ export const piniaMenuStore = defineStore(
     })
     const isSetupAppMenuLock = ref(true)
 
+    /**
+     *
+     * @param option 菜单项（类似于菜单项的数据结构也可以）
+     *
+     * @returns 转换后的菜单项
+     *
+     * @description
+     * 将路由项或者类似于菜单项的数据结构转换为菜单项（AppMenu）。
+     * 但是，该方法有一个地方需要注意，那就是需要手动设置一下准确的 fullPath，
+     * 其实这是一个设计的失误，因为该方法不能准确的感知到 fullPath 应该是什么。
+     *
+     * @example
+     * resolveOption({ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } })
+     * resolveOption({ ...VueRouterRouteOption })
+     */
     const resolveOption = (option: AppMenuOption) => {
       const { meta } = option
+      const { i18nKey, noLocalTitle } = meta
 
       /** 设置 label, i18nKey 优先级最高 */
-      const label = computed(() =>
-        meta?.i18nKey ? t(`${meta!.i18nKey}`) : meta?.noLocalTitle,
-      )
+      const label = computed(() => (i18nKey ? t(`${i18nKey}`) : noLocalTitle))
       /**
        *
        * 拼装菜单项
@@ -84,7 +140,8 @@ export const piniaMenuStore = defineStore(
       } as AppMenuOption
       /** 合并 icon */
       const attr: AppMenuOption = Object.assign({}, route, {
-        icon: hasMenuIcon(option),
+        icon: createMenuIcon(option),
+        extra: createMenuExtra(option),
       })
 
       if (option.fullPath === getCatchMenuKey()) {
@@ -145,15 +202,16 @@ export const piniaMenuStore = defineStore(
      * @param option 菜单当前 option 项
      * @param query 路由参数
      *
-     * @remark 修改 `menu key` 后的回调函数
-     * @remark 修改后, 缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)
+     * @description
+     * 修改 `menu key` 后的回调函数。
+     * 修改后，缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)。
      *
-     * 如果 windowOpen 存在, 则直接打开新窗口，不会更新当前菜单状态，也不会做其他的操作
-     * 如果 sameLevel 存在，则会追加一层面包屑，并不会触发菜单更新与标签页更新
+     * 如果 windowOpen 存在, 则直接打开新窗口，不会更新当前菜单状态，也不会做其他的操作。
+     * 如果 sameLevel 存在，则会追加一层面包屑，并不会触发菜单更新与标签页更新。
      *
-     * 在执行更新操作后会做一些缓存操作
+     * 在执行更新操作后会做一些缓存操作。
      *
-     * 该方法是整个模板的核心驱动: 菜单、标签页、面包屑、浏览器标题等等的更新方法
+     * 该方法是整个模板的核心驱动: 菜单、标签页、面包屑、浏览器标题等等的更新方法。
      *
      * @example
      * changeMenuModelValue('/dashboard',{ dashboard option  }) // 跳转页面至 dashboard，并且更新菜单状态、标签页、面包屑、浏览器标题等等
@@ -224,8 +282,8 @@ export const piniaMenuStore = defineStore(
      *
      * @param path 路由地址
      *
-     * @remark 监听路由地址变化更新菜单状态
-     * @remark 递归查找匹配项
+     * @description
+     * 监听路由地址变化更新菜单状态。
      */
     const updateMenuKeyWhenRouteUpdate = async (
       path: string,
@@ -368,7 +426,7 @@ export const piniaMenuStore = defineStore(
   },
   {
     persist: {
-      key: 'piniaMenuStore',
+      key: APP_CATCH_KEY.appPiniaMenuStore,
       storage: window.sessionStorage,
       paths: ['breadcrumbOptions', 'menuKey', 'menuTagOptions'],
     },

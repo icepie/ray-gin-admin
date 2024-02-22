@@ -3,7 +3,6 @@ $menuTagWrapperWidth: 76px;
 
 .menu-tag {
   height: $layoutMenuHeight;
-  border-bottom: solid 1px var(--n-border-color);
   display: flex;
   align-items: center;
   padding: 6px 0;
@@ -20,13 +19,9 @@ $menuTagWrapperWidth: 76px;
       cursor: pointer;
     }
 
-    & .menu-tag__left-arrow {
-      transform: rotate(90deg);
-    }
-
     & .menu-tag__right-wrapper {
       & .menu-tag__right-arrow {
-        transform: rotate(270deg);
+        transform: rotate(180deg);
       }
 
       & .menu-tag__right-setting {
@@ -86,4 +81,16 @@ $menuTagWrapperWidth: 76px;
     width: 18px;
     height: 18px;
   }
+}
+
+.menu-tag__right-setting--spinning {
+  animation: elementRotate 0.8s linear infinite;
+}
+
+.ray-template--light .menu-tag {
+  box-shadow: 0 2px 2px $layoutShadowColorLight;
+}
+
+.ray-template--dark .menu-tag {
+  box-shadow: 0 2px 2px $layoutShadowColorDark;
 }

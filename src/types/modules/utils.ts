@@ -5,9 +5,21 @@ export type StorageLike = 'sessionStorage' | 'localStorage'
 
 export type RemoveStorageKey =
   | string
-  | 'all'
-  | 'all-sessionStorage'
-  | 'all-localStorage'
+  | '__all__'
+  | '__all_sessionStorage__'
+  | '__all_localStorage__'
+
+export type RemoveStorageFC = <T extends RemoveStorageKey>(
+  key: T,
+  storageType: T extends '__all__'
+    ? 'all'
+    : T extends '__all_sessionStorage__'
+      ? 'sessionStorage'
+      : T extends '__all_localStorage__'
+        ? 'localStorage'
+        : StorageLike,
+  options?: StorageOptions,
+) => void
 
 export type ValidateValueType =
   | 'BigUint64Array'
@@ -88,3 +100,26 @@ export type ElementSelector = string | `attr:${string}`
 export type MaybeArray<T> = T | T[]
 
 export type DownloadAnyFileDataType = Blob | File | string | ArrayBuffer
+
+export enum OperatingSystem {
+  Windows = 'Windows',
+  MacOS = 'MacOS',
+  Linux = 'Linux',
+  Android = 'Android',
+  IOS = 'IOS',
+  Unknown = 'Unknown',
+}
+
+export interface StorageOptions<T = any> {
+  prefix?: boolean
+  prefixKey?: string
+  defaultValue?: T
+}
+
+export interface QueryElementsOptions<T extends Element = Element> {
+  defaultElement?: T
+}
+
+export type PropertyName = string | number | symbol
+
+export type Many<T> = T | ReadonlyArray<T>

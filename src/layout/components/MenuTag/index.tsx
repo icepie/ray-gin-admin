@@ -48,6 +48,7 @@ import { useMenuGetters, useMenuActions } from '@/store'
 import { hasClass, uuid, queryElements } from '@/utils'
 import { useMaximize, useSpinning, useAppRoot, useSiderBar } from '@/hooks'
 import { throttle } from 'lodash-es'
+import { getVariableToRefs } from '@/global-variable'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types'
@@ -68,6 +69,8 @@ export default defineComponent({
       closeRight: $closeRight,
       closeLeft: $closeLeft,
       closeOther: $closeOther,
+      checkCloseLeft,
+      checkCloseRight,
     } = useSiderBar()
 
     const canDisabledOptions = [
@@ -150,6 +153,7 @@ export default defineComponent({
       actionDropdownShow: false,
     })
     const MENU_TAG_DATA = 'menu_tag_data' // 注入 tag 前缀
+    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
 
     /**
      *
@@ -264,7 +268,6 @@ export default defineComponent({
      * 动态设置某些项禁用
      */
     const setDisabledAccordionToIndex = () => {
-      const length = getMenuTagOptions.value.length - 1
       const { closeable } =
         getMenuTagOptions.value[currentContextmenuIndex] ??
         ({} as MenuTagOptions)
@@ -273,18 +276,14 @@ export default defineComponent({
       setMoreOptionsDisabled('closeCurrentPage', !closeable ?? false)
 
       // 是否需要禁用关闭右侧标签页
-      if (currentContextmenuIndex === length) {
-        setMoreOptionsDisabled('closeRight', true)
-      } else if (currentContextmenuIndex < length) {
-        setMoreOptionsDisabled('closeRight', false)
-      }
+      checkCloseRight(currentContextmenuIndex)
+        ? setMoreOptionsDisabled('closeRight', false)
+        : setMoreOptionsDisabled('closeRight', true)
 
       // 是否需要禁用关闭左侧标签页
-      if (currentContextmenuIndex === 0) {
-        setMoreOptionsDisabled('closeLeft', true)
-      } else if (currentContextmenuIndex > 0) {
-        setMoreOptionsDisabled('closeLeft', false)
-      }
+      checkCloseLeft(currentContextmenuIndex)
+        ? setMoreOptionsDisabled('closeLeft', false)
+        : setMoreOptionsDisabled('closeLeft', true)
     }
 
     /**
@@ -295,7 +294,7 @@ export default defineComponent({
      */
     const setCurrentContextmenuIndex = () => {
       const index = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === getMenuKey.value,
+        (curr) => curr.fullPath === getMenuKey.value,
       )
 
       currentContextmenuIndex = index
@@ -307,7 +306,7 @@ export default defineComponent({
     const menuTagMouseenter = (option: MenuTagOptions) => {
       if (
         getMenuTagOptions.value.length > 1 &&
-        option.key !== getRootPath.value
+        option.fullPath !== getRootPath.value
       ) {
         option.closeable = true
       }
@@ -315,7 +314,7 @@ export default defineComponent({
 
     /** 移出 MenuTag 时, 判断是否为当前已激活 key */
     const menuTagMouseleave = (option: MenuTagOptions) => {
-      if (option.key !== getMenuKey.value) {
+      if (option.fullPath !== getMenuKey.value) {
         option.closeable = false
       }
     }
@@ -412,11 +411,13 @@ export default defineComponent({
       menuTagMouseleave,
       MENU_TAG_DATA,
       iconConfig: {
-        width: 20,
-        height: 28,
+        width: 22,
+        height: 22,
       },
       maximize,
       getRootPath,
+      reload,
+      globalMainLayoutLoad,
     }
   },
   render() {
@@ -426,6 +427,7 @@ export default defineComponent({
       uuidScrollBar,
       getMenuTagOptions,
       MENU_TAG_DATA,
+      globalMainLayoutLoad,
     } = this
     const {
       maximize,
@@ -437,6 +439,7 @@ export default defineComponent({
       menuTagMouseenter,
       menuTagMouseleave,
       actionDropdownSelect,
+      reload,
     } = this
 
     return (
@@ -462,6 +465,7 @@ export default defineComponent({
             align="center"
             justify="space-between"
             inline
+            size={[16, 0]}
           >
             <RIcon
               name="expanded"
@@ -517,7 +521,7 @@ export default defineComponent({
                             }}
                           </span>
                           {(curr.closeable || getMenuTagOptions.length === 1) &&
-                          curr.key !== getRootPath ? (
+                          curr.fullPath !== getRootPath ? (
                             <NIcon
                               class="menu-tag__btn-icon"
                               {...{
@@ -533,7 +537,7 @@ export default defineComponent({
                             // 默认使用一个空 NIcon 占位，避免不能正确的触发动画
                             <NIcon
                               class={[
-                                curr.key !== getRootPath
+                                curr.fullPath !== getRootPath
                                   ? 'menu-tag__btn-icon'
                                   : 'menu-tag__btn-icon--hidden',
                               ]}
@@ -551,7 +555,7 @@ export default defineComponent({
               align="center"
               inline
               wrap={false}
-              size={[6, 6]}
+              size={[8, 0]}
             >
               <RIcon
                 name="expanded"
@@ -567,6 +571,19 @@ export default defineComponent({
                 customClassName="menu-tag__right-setting"
                 onClick={() => {
                   maximize(true)
+                }}
+              />
+              <RIcon
+                name="reload"
+                width={iconConfig.width}
+                height={iconConfig.height}
+                customClassName={`menu-tag__right-setting ${
+                  !globalMainLayoutLoad
+                    ? 'menu-tag__right-setting--spinning'
+                    : ''
+                }`}
+                onClick={() => {
+                  reload()
                 }}
               />
               <RMoreDropdown

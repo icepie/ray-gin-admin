@@ -19,22 +19,38 @@ import { RModal } from '@/components'
 
 import { getStorage, setStorage } from '@/utils'
 import { useSigningActions } from '@/store'
+import { APP_CATCH_KEY } from '@/app-config'
 
 export default defineComponent({
   name: 'AppVersionProvider',
   setup() {
-    const storageKey = 'appVersionProvider'
     const {
       pkg: { version },
     } = __APP_CFG__
-    const cacheVersion = getStorage<string>(storageKey, 'localStorage')
+    const cacheVersion = getStorage<string>(
+      APP_CATCH_KEY.appVersionProvider,
+      'localStorage',
+    )
     const modalShow = ref(false)
     const { logout } = useSigningActions()
 
-    if (version !== cacheVersion || !cacheVersion) {
-      modalShow.value = true
+    // 如果获取缓存版本号为 null，则说明是第一次访问，直接缓存版本号
+    if (cacheVersion !== null) {
+      if (version !== cacheVersion) {
+        modalShow.value = true
 
-      setStorage<string>(storageKey, version, 'localStorage')
+        setStorage<string>(
+          APP_CATCH_KEY.appVersionProvider,
+          version,
+          'localStorage',
+        )
+      }
+    } else {
+      setStorage<string>(
+        APP_CATCH_KEY.appVersionProvider,
+        version,
+        'localStorage',
+      )
     }
 
     return {

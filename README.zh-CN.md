@@ -4,7 +4,7 @@
       alt="Ray Template"
       width="200"
       height="200"
-      src="https://r2chevereto.yka.moe/longmao.navigator.th.png"
+      src="https://avatars.githubusercontent.com/u/51957438?v=4"
     />
   </a>
   <br />
@@ -74,7 +74,7 @@
 - [Vue3](https://v3.vuejs.org/) - 熟悉 Vue 基础语法
 - [TypeScript](https://www.typescriptlang.org/) - 熟悉 TypeScript 基本语法
 - [ES6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
-- [Vue-Hooks-Plus] - 熟悉 vue-hooks-plus useRequest 方法的基本使用
+- [Vue-Hooks-Plus](https://inhiblabcore.github.io/docs/hooks/) - 熟悉 vue-hooks-plus useRequest 方法的基本使用
 - [Vue-Router-Next](https://next.router.vuejs.org/) - 熟悉 vue-router4.x 基本使用
 - [Naive-UI](https://www.naiveui.com) - naive ui 基本使用
 - [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法

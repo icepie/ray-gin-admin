@@ -11,10 +11,34 @@
 
 import { useSettingActions, useSettingGetters } from '@/store'
 import { useI18n } from '@/hooks'
+import { APP_THEME } from '@/app-config'
+
+const setThemeOverrides = (theme: boolean) => {
+  const { getPrimaryColorOverride } = useSettingGetters()
+  const { updateSettingState } = useSettingActions()
+
+  updateSettingState(
+    'primaryColorOverride',
+    theme
+      ? Object.assign(
+          {},
+          getPrimaryColorOverride.value,
+          APP_THEME.appNaiveUIThemeOverrides.dark,
+          APP_THEME.appNaiveUIThemeOverridesCommon.dark,
+        )
+      : Object.assign(
+          {},
+          getPrimaryColorOverride.value,
+          APP_THEME.appNaiveUIThemeOverrides.light,
+          APP_THEME.appNaiveUIThemeOverridesCommon.light,
+        ),
+  )
+}
 
 export const useTheme = () => {
   /**
    *
+   * @description
    * 获取当前主题色与主题色描述
    * 并且描述会根据当前语言环境自动切换
    *
@@ -36,6 +60,7 @@ export const useTheme = () => {
 
   /**
    *
+   * @description
    * 切换至暗色主题
    *
    * @example
@@ -45,10 +70,12 @@ export const useTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', true)
+    setThemeOverrides(true)
   }
 
   /**
    *
+   * @description
    * 切换至明色主题
    *
    * @example
@@ -58,12 +85,14 @@ export const useTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', false)
+    setThemeOverrides(false)
   }
 
   /**
    *
    * @param theme 当前主题色
    *
+   * @description
    * 当前主题有明暗两套
    *
    * @example
@@ -77,6 +106,7 @@ export const useTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', !theme)
+    setThemeOverrides(!theme)
   }
 
   return {

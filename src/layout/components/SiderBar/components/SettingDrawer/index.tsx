@@ -23,13 +23,13 @@ import {
 } from 'naive-ui'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
-import { APP_THEME } from '@/app-config'
+import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { PropType } from 'vue'
 import type { Placement } from '@/types'
 
-const SettingDrawer = defineComponent({
+export default defineComponent({
   name: 'SettingDrawer',
   props: {
     show: {
@@ -64,31 +64,18 @@ const SettingDrawer = defineComponent({
         emit('update:show', bool)
       },
     })
-    // 过渡效果下拉
-    const contentTransitionOptions = [
-      {
-        label: '无',
-        value: 'none',
+    // 为了方便管理多个 computed，因为 computed 不能被逆向修改
+    const modelSwitchReactive = computed({
+      get: () => {
+        return {
+          getMenuTagSwitch: getMenuTagSwitch.value,
+          getBreadcrumbSwitch: getBreadcrumbSwitch.value,
+          getCopyrightSwitch: getCopyrightSwitch.value,
+          getContentTransition: getContentTransition.value,
+          getWatermarkSwitch: getWatermarkSwitch.value,
+        }
       },
-      {
-        label: '缩放效果',
-        value: 'scale',
-      },
-      {
-        label: '淡入淡出',
-        value: 'fade',
-      },
-      {
-        label: '闪入效果',
-        value: 'opacity',
-      },
-    ]
-    const modelSwitchReactive = reactive({
-      getMenuTagSwitch: getMenuTagSwitch.value,
-      getBreadcrumbSwitch: getBreadcrumbSwitch.value,
-      getCopyrightSwitch: getCopyrightSwitch.value,
-      getContentTransition: getContentTransition.value,
-      getWatermarkSwitch: getWatermarkSwitch.value,
+      set: (value) => {},
     })
 
     return {
@@ -96,13 +83,12 @@ const SettingDrawer = defineComponent({
       changePrimaryColor,
       getAppTheme,
       getPrimaryColorOverride,
-      contentTransitionOptions,
       updateSettingState,
       modelSwitchReactive,
     }
   },
   render() {
-    const { $t } = this
+    const { $t, changePrimaryColor, updateSettingState } = this
 
     return (
       <NDrawer
@@ -122,16 +108,16 @@ const SettingDrawer = defineComponent({
             <NColorPicker
               swatches={APP_THEME.appThemeColors}
               v-model:value={this.getPrimaryColorOverride.common!.primaryColor}
-              onUpdateValue={this.changePrimaryColor.bind(this)}
+              onUpdateValue={changePrimaryColor.bind(this)}
             />
             <NDivider titlePlacement="center">
               {$t('headerSettingOptions.ContentTransition')}
             </NDivider>
             <NSelect
               v-model:value={this.modelSwitchReactive.getContentTransition}
-              options={this.contentTransitionOptions}
+              options={CONTENT_TRANSITION_OPTIONS}
               onUpdateValue={(value) => {
-                this.updateSettingState('contentTransition', value)
+                updateSettingState('contentTransition', value)
               }}
             />
             <NDivider titlePlacement="center">
@@ -142,7 +128,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getMenuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('menuTagSwitch', bool)
+                    updateSettingState('menuTagSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -150,7 +136,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getBreadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('breadcrumbSwitch', bool)
+                    updateSettingState('breadcrumbSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -158,7 +144,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getWatermarkSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('watermarkSwitch', bool)
+                    updateSettingState('watermarkSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -166,7 +152,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getCopyrightSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('copyrightSwitch', bool)
+                    updateSettingState('copyrightSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -177,5 +163,3 @@ const SettingDrawer = defineComponent({
     )
   },
 })
-
-export default SettingDrawer

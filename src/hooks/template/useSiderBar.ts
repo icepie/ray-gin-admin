@@ -170,6 +170,10 @@ export function useSiderBar() {
   const close = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'close')
 
+    if (getMenuTagOptions.value.length === 1) {
+      return
+    }
+
     if (normal) {
       const { index, option } = normal
 
@@ -208,13 +212,14 @@ export function useSiderBar() {
         'path',
         'name',
         'redirect',
-      ]) as unknown as AppMenuOption
+      ])
+      const res = resolveOption(pickOption as unknown as AppMenuOption)
 
       changeMenuModelValue(
-        pickOption.path,
+        res.path,
         resolveOption({
-          ...pickOption,
-          fullPath: pickOption.path,
+          ...res,
+          fullPath: res.path,
         }),
       )
     }

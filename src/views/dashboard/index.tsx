@@ -2,7 +2,6 @@ import './index.scss'
 
 import {
   NCard,
-  NLayout,
   NDescriptions,
   NDescriptionsItem,
   NTag,
@@ -67,16 +66,16 @@ const Dashboard = defineComponent({
         value: 'Vue3.x',
       },
       {
-        label: 'Vite4.0',
-        value: 'Vite4.0',
+        label: 'Vite5.x',
+        value: 'Vite5.x',
       },
       {
         label: 'Pinia',
         value: 'Pinia',
       },
       {
-        label: 'TSX',
-        value: 'TSX',
+        label: 'TS(X)',
+        value: 'TS(X)',
       },
     ]
 
@@ -87,7 +86,7 @@ const Dashboard = defineComponent({
   },
   render() {
     return (
-      <NLayout class="dashboard-layout layout-full">
+      <NFlex vertical>
         <NCard>
           {{
             header: () => <RIcon name="ray" size="64" />,
@@ -126,7 +125,7 @@ const Dashboard = defineComponent({
         <NCard title="友情链接">
           <RayLink />
         </NCard>
-      </NLayout>
+      </NFlex>
     )
   },
 })

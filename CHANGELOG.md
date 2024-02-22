@@ -1,5 +1,238 @@
 # CHANGE LOG
 
+## 4.6.4-beta1.0
+
+更新了核心依赖插件：`vite`, `vue`。
+
+新增 `__ray-template` 包，用于模板启动时的一些检查或者其他钩子的启动。
+
+## Feats
+
+- 更新了一些注释
+- 更新 `vue` 版本至 `3.4.19`
+- 更新 `vite` 版本至 `5.1.3`；最新版本 `vite` 优化了 `HMR` 逻辑
+- 新增检查器功能（存于 `__ray-template` 包），用于在模板启动后，做一些检查工作
+- 使用 `checkRightClose`, `checkLeftClose` 方法替换原有检查关闭按钮禁用逻辑
+- `useDevice` 方法返回属性 `isTabletOrSmaller` 使用 `readonly` 方法包裹
+- `RChart` 组件相关
+  - 移除 `animation` 配置项，该配置项在使用的时候可能会有潜在的性能问题
+  - 新增 `nextTick` 配置项，是否将渲染图标内容放置到下一个队列中
+    > 该配置项启用后，会先渲染一个空的图表，然后在下一个队列中渲染图表内容。这样做的好处是，可以避免一些图表渲染的性能问题，但是会导致图表渲染的时候会有一个空白的过程。
+  - 修改 `registerTheme` 方法调用时机，并且该方法仅会执行一次
+  - 预设 `Card` 风格的下载功能下拉框预留字段由 `downloadChart` 更名为 `__DOWN_LOAD_CHART__`
+
+## Fixes
+
+- 修复更新主题色时 `preset` 没有被正确更新问题。现在在更新主题色后，会正确的更新 `primaryColorPressed`
+- 修复 `README.md` 描述文件中的一些错误描述
+
+## 4.6.3
+
+## Feats
+
+- `GlobalSearch` 相关
+  - 取消递归查找，使用 `getRoutes` 方法替代查找，提高查找速度
+  - 现在是用快捷键激活搜索框的时候，如果再次按下快捷键并且搜索框已经是激活状态，则不会重新渲染搜索框
+- 补充 `resolveOption` 方法注释。在使用该方法的时候，需要开发者自己手动补充当前项的 `fullPath` 字段。因为该方法在处理的时候，并不能准确的感知到当前项的 `fullPath` 字段，所以需要手动补充
+
+```ts
+import { useMenuActions } from '@/store'
+
+const { resolveOption } = useMenuActions()
+
+resolveOption({
+  // ...your option
+  fullPath: '/your path',
+})
+```
+
+- 优化 `GlobalSearch` 组件样式
+- `addStyle` 方法相关
+  - 方法重写并且更名为 `setStyle`
+  - 支持自动补全内核前缀
+  - 支持识别样式变量（css var）方式插入
+  - 支持字符串数组形式插入样式
+- `queryElements` 方法支持默认值配置项
+- `addClass` 相关
+  - 方法更名为 `setClass`
+  - 支持数组传参
+- `hasClass`, `removeClass` 方法支持数组传参
+- 补充 `pick`, `omit` 方法类型重载
+- `menu store` 相关
+  - 新增 `depthSearchAppMenu` 方法，用于深度搜索菜单，并且该方法会缓存上一次的搜索结果
+- 新增 `isAsyncFunction` 方法，用于判断是否为 `async` 函数
+
+```ts
+import { depthSearchAppMenu } from '@/store'
+
+const result = depthSearchAppMenu(appMenuOptions, 'target fullPath')
+```
+
+- `useBadge` 相关
+  - 使用 `depthSearchAppMenu` 方法替代原查找方法
+  - 将 `equal` 方法提取到 `utils` 包中，并且更名为 `equalRouterPath`，用于判断两个路径是否相等
+
+## Fixes
+
+- 修复 `SettingDrawer` 组件某些开关不能正确同步状态问题
+- 修复 `usePrint` 方法在 `unrefElement` 方法获取失败后不执行的问题。在 `print-js` 逻辑中，如果未获取到 `dom`，会视为其他的打印方式，不符合 `print-js` 的设计
+- `isPromise` 方法修正，现在会正确的识别 `async` 标记d的函数
+
+## 4.6.2
+
+## Feats
+
+- `AppMenu Extra` 已经稳定发布，现在你可以在菜单标题后面添加标记了，相关变更
+  - `extraIcon` 类型变为 `VNode`
+  - 新增 `show` 配置项，用于配置是否显示 `extra` 标记，如果默认为 `false`，则不会显示 `extra` 标记，如果未配置或者配置为 `true`，则会显示 `extra` 标记。意味着只要你配置了 `label` 则会显示标记
+  - 新增 `useBadge hooks` 方法，便捷操作菜单标记
+    - `update`：更新标记
+    - `show`：显示标记
+    - `hidden`：隐藏标记
+  - 新增 `i18nLabel` 配置项，当你希望该标签能够跟随模板语言切换动态切换的时候你可能用的上，该配置项优先级高于 `label`
+
+> 该配置项仅在 `collapsed` 为 `false` 时生效。
+
+- 更新 `axios` 版本至 `1.6.7`
+- 移除 `matchMenuOption` 方法
+- 调整 `vueRouterRegister` 方法的运行时机，现在会在 `router` 注册完成后再执行该方法
+- 优化一些试例页面代码
+- `RTable` 相关
+  - 新增 `Props` 组件，支持勾选配置一些表格的配置项，目前仅支持：边框、条纹
+  - 优化 `Size` 组件，取消没必要的响应式代理数据
+  - 取消自定义工具组件的 `Popover` 提示
+  - 更改 `config.ts` 文件名为 `shared.ts`，并且 `config` 配置导入导出方式更改为 `import { config } from '@/shared'`
+- 更改 `README-ZH.md` 文件名为 `README.zh-CN.md`
+
+## 4.6.2-beta1.2
+
+## Feats
+
+- 优化 `AppMenu Extra` 标记样式，现在不会因为菜单标题过长将标记挤出去
+- 优化 `RQRCode` 组件样式，在 `error` 状态下会模糊显示二维码
+
+## Fixes
+
+- 修复 `close` 方法会关闭最后一个标签的问题，现在如果当前的 `getMenuTagOptions` 长度为 `1`，则不会关闭标签页
+
+## 4.6.2-beta1.1
+
+## Feats
+
+- `cache` 工具包相关
+  - 优化 `removeStorage` 方法类型推导，当 `key` 为预留字关键字时，强制绑定 `storageType` 为对应的类型值
+
+```ts
+import { removeStorage } from '@/utils'
+
+// 正确
+removeStorage('__all__', 'all')
+removeStorage('__all_sessionStorage__', 'sessionStorage')
+removeStorage('__all_localStorage__', 'localStorage')
+remove('your key', 'sessionStorage' || 'localStorage')
+
+// 错误
+removeStorage('__all__', 'sessionStorage')
+removeStorage('__all_sessionStorage__', 'localStorage')
+removeStorage('__all_localStorage__', 'all')
+removeStorage('__all_localStorage__', 'sessionStorage')
+remove('your key', 'all')
+```
+
+- 优化 `Layout` 布局样式，移除 `border` 边框，添加 `box-shadow` 阴影
+
+## Fixes
+
+- 修复 `copy` 指令复制的时候不能正确的提示的问题
+- 修复 `AppVersionProvider` 组件不能正确的注入 `appVersion` 的问题
+
+## 4.6.2-beta1.0
+
+为了支持同域名下同时部署多套系统，重构了 `cache` 工具包支持前缀配置。并且暴露重构所有的缓存 `key` 配置项，为了便捷的进行私有数据缓存。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.4.15`，核心性能优化更新
+- `cache` 工具包相关
+  - 重构 `getStorage` 方法，支持前缀配置
+  - 重构 `setStorage` 方法，支持前缀配置
+  - 重构 `hasStorage` 方法，支持前缀配置
+  - 重构 `removeStorage` 方法 - 支持前缀配置 - 更新预留 `key`，现在更新为：`__all__`, `__all_sessionStorage__`, `__all_localStorage__`
+
+> 默认不启用该功能，如果需要启用，可以在调用 `cache` 包方法的时候手动配置 `prefix` 属性为 `true`，默认会读取 `prefixKey` 配置项，如果未设置则会尝试读取 `APP_CATCH_KEY_PREFIX`。并且 `useStorage` 之类的第三方工具库并未集成该方法。
+
+- 暴露所有缓存 `key`，允许自定义所有缓存 `key`
+- `designConfig` 配置相关
+  - `appNaiveUIThemeOverrides` 配置项支持按照 `dark`, `light` 两个主题分别配置
+  - 新增 `appNaiveUIThemeOverridesCommon` 配置项
+- 优化 `GlobalSearch` 组件样式
+- 更新搜索按钮样式，由图标变为按钮样式（`GlobalSearchButton`）
+- 更新 `appThemeColors` 色盘
+- `hasMenuIcon` 更名为 `createMenuIcon`
+- 默认绑定过渡动画更改为 `scale`
+- 更新内容区域背景色（`$layoutContentBackgroundColorDark`、`$layoutContentBackgroundColorLight`）
+- 更新底部区域背景色（`$layoutFooterBackgroundColorDark`、`$layoutFooterBackgroundColorLight`）
+- `RouteMeta` 配置项相关
+  - 新增 `extra` 配置项，用于配置标记
+
+```ts
+import { t } from '@/hooks'
+import { LAYOUT } from '@/router/constant'
+
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const cacheDemo: AppRouteRecordRaw = {
+  // ...your route config,
+  meta: {
+    // ...other meta config,
+    extra: 'new',
+  },
+}
+
+// 当然你也可以配置 extra 为一个对象
+
+AppMenuExtraOptions {
+  extraLabel?: string
+  extraIcon?: string | VNode
+  extraType?: TagProps['type']
+}
+
+const cacheDemo: AppRouteRecordRaw = {
+  ...your route config,
+  meta: {
+    ...other meta config,
+    extra: {
+      extraLabel: 'new',
+      extraIcon: 'icon' || <Icon />,
+      extraType: 'primary' || 'success' || 'warning' || 'error' || 'info' || 'default',
+    },
+  },
+}
+```
+
+## Fixes
+
+- 修复 `naive-ui` 修改主题色不能准确的同步到全局的问题
+
+## 4.6.1
+
+## Feats
+
+- 更新 `vite` 版本至 `5.0.11`
+- 更新 `@vitejs/plugin-vue` 版本至 `5.0.3`
+- `maximize` 方法 `options.scrollToOptions` 配置项现在仅在放大状态才会生效
+- 更新 `AppVersionProvider` 版本刷新逻辑
+- `axios` 相关
+  - `cancelConfig`
+    - `needCancel` 配置项变更 为 `cancel`
+- `icons` 相关
+  - 变更 `reload` 图标
+  - 变更 `expanded` 图标
+- 路由切换过渡动画优化，新增两个新过渡动画。默认绑定过渡动画更改为 `fade-slide`
+- `app-config` 暴露 `CONTENT_TRANSITION_OPTIONS` 配置项，用于配置路由切换过渡动画
+- 变更 `regexConfig` 配置项 `validCSSUnit` 为 `cssUnit`
+- 调整 `reload` 方法位置，现在调整为在 `MenuTag` 栏
+
 ## 4.6.0
 
 破坏性更新，请谨慎更新。
@@ -676,7 +909,7 @@ const demo2 = null
 
 ### Feats
 
-- 新增切换路由自动取消上一路由所有请求。但是可以通过配置 `useRequest` 与 `request` 方法的 `cancelConfig.needCancel` 属性控制是否需要自动取消该请求。该配置默认为 `true`，当配置为 `false` 时，则不会被取消器取消
+- 新增切换路由自动取消上一路由所有请求。但是可以通过配置 `useRequest` 与 `request` 方法的 `cancelConfig.cancel` 属性控制是否需要自动取消该请求。该配置默认为 `true`，当配置为 `false` 时，则不会被取消器取消
 
 ```ts
 import { useRequest, useHookPlusRequest } from '@/axios/index'
@@ -689,7 +922,7 @@ const { data, loading, run } = useRequest<{
     url: 'https://jsonplaceholder.typicode.com/todos/1',
     method: 'get',
     cancelConfig: {
-      needCancel: true,
+      cancel: true,
     },
   },
   {
@@ -702,7 +935,7 @@ request({
   url: 'https://jsonplaceholder.typicode.com/todos/1',
   method: 'get',
   cancelConfig: {
-    needCancel: true,
+    cancel: true,
   },
 })
 ```
