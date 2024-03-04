@@ -89,8 +89,5 @@ export type DeepMutable<T> = {
  * ReturnPromiseType<Promise<string>> // string
  * ReturnPromiseType<Promise<string> | Promise<number>> // string | number
  */
-export type ReturnPromiseType<T extends Promise<any>> = T extends Promise<
-  infer U
->
-  ? U
-  : never
+export type ReturnPromiseType<T extends Promise<any>> =
+  T extends Promise<infer U> ? U : never

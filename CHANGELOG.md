@@ -1,5 +1,34 @@
 # CHANGE LOG
 
+## 4.6.4
+
+稳定了 `4.6.4` 版本。
+
+## Feats
+
+- 更新 `naive-ui` 版本至 `2.38.1`，详细更细请查看 [CHANGELOG.zh-CN](https://github.com/tusen-ai/naive-ui/blob/main/CHANGELOG.zh-CN.md)
+  - 同步更新 `ModalProvider` 在顶层的注入（但是 `resolver` 暂为更新，所以需要手动导入）
+- `useI18n` 方法
+  - 重写 `overrideLocaleFunc` 方法
+
+## Fixes
+
+- 修复 `useI18n` 方法在 `HMR` 时可能会报错的问题
+
+## 4.6.4-beta1.1
+
+更新了一大波的开发依赖。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.4.20`
+- 更新 `vite` 版本至 `5.1.4`
+- 更新了开发依赖
+- 移除 `utils/xlsx` 工具包与 `xlsx` 依赖
+- 更新了 `viteCDNPlugin` 配置形式，现在会自动读取版本号
+- 更新 `vue-hooks-plus` 版本至 `1.8.8`
+- 更改 `vite-plugins` 包名称为 `vite-helper`
+
 ## 4.6.4-beta1.0
 
 更新了核心依赖插件：`vite`, `vue`。
