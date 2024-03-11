@@ -28,6 +28,7 @@ export interface CancelConfig {
 }
 
 export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {
+  needAuth?: boolean
   cancelConfig?: CancelConfig
   __CANCELER_TAG_RAY_TEMPLATE__?: '__CANCELER_TAG_RAY_TEMPLATE__'
 }
